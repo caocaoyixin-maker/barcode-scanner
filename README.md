@@ -66,8 +66,30 @@ source .venv/bin/activate
 ### Install dependencies: 
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
+
+### System dependencies: 
+
+This project requires the 'zbar' library. 
+
+1. macOS (tested)
+
+```bash
+brew install zbar
+export DYLD_LIBRARY_PATH=$(brew --prefix zbar)/lib
+```
+
+2. Linux (untested, may require)
+
+```bash
+sudo apt update
+sudo apt install libzbar0
+```
+
+3. Windows (untested)
+
+Windows may require installing the ZBar library separately and ensuring it is available in you system PATH. 
 
 ### Run the application: 
 
