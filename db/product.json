@@ -1,0 +1,28 @@
+{
+  "product": [
+    {
+      "barcode": "ice-cream",
+      "name": "ice-cream",
+      "ingredient": ["milk"],
+      "weight": 0
+    },
+    {
+      "barcode": "Chocolate",
+      "name": "Chocolate",
+      "ingredient": [""],
+      "weight": 0
+    },
+    {
+      "barcode": "Bread",
+      "name": "Bread",
+      "ingredient": [""],
+      "weight": 0
+    },
+    {
+      "barcode": "Yogurt",
+      "name": "Yogurt",
+      "ingredient": ["milk"],
+      "weight": 0
+    }
+  ]
+}

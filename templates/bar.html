@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barcode System</title>
+</head>
+<body>
+    <h1>Barcode Encoder & Decoder</h1>
+
+    <h2>Encode Barcode</h2>
+    <form method="POST" action="/encode">
+        <input type="text" name="data" placeholder="Enter text" required>
+        <button type="submit">Generate</button>
+    </form>
+
+    {% if barcode_image %}
+        <h3>Generated Barcode:</h3>
+        <img src="{{ barcode_image }}" width="300">
+    {% endif %}
+
+    <hr>
+
+    <h2>Decode Barcode</h2>
+    <form method="POST" action="/decode" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Decode</button>
+    </form>
+
+    {% if decoded_data %}
+        <h3>Decoded Data:</h3>
+        <ul>
+        {% for item in decoded_data %}
+            <li>{{ item }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

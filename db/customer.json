@@ -1,0 +1,20 @@
+{
+  "Customer": [
+    {
+      "name": "CustomerA",
+      "allergy": ["milk"]
+    },
+    {
+      "name": "CustomerB",
+      "allergy": [""]
+    },
+    {
+      "name": "CustomerC",
+      "allergy": [""]
+    },
+    {
+      "name": "CustomerD",
+      "allergy": [""]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Scanner</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    #reader {
+      width: 320px;
+      margin: auto;
+    }
+
+    /* 🔥 critical fix for iPhone alignment */
+    #reader video {
+      width: 100% !important;
+      height: auto !important;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      margin-top: 15px;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Camera Scanner System Prototype</h2>
+
+  <button id="startBtn">Start Camera</button>
+
+  <button id="stopBtn">Stop Camera</button>
+
+  <!-- FIX: static container (not dynamic) -->
+  <div id="reader"></div>
+
+  <pre id="log"></pre>
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const log = document.getElementById("log");
+    const reader = document.getElementById("reader");
+
+    function writeLog(msg) {
+      log.textContent += msg + "\n";
+    }
+
+    let scannerStarted = false;
+    let html5QrCode = null; // global reference
+
+    startBtn.addEventListener("click", async () => {
+      if (scannerStarted) return; // prevent multiple starts
+      scannerStarted = true;
+
+      html5QrCode = new Html5Qrcode("reader");
+
+      try {
+        await html5QrCode.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+
+            // FIX: responsive centered scan box
+            qrbox: (w, h) => {
+              const size = Math.min(w, h) * 0.7;
+              return { width: size, height: size };
+            },
+
+            aspectRatio: 1.0 // prevents stretching
+          },
+          (decodedText) => {
+              writeLog("Decoded: " + decodedText);
+
+              html5QrCode.stop().then(() => {
+                cleanupCamera();
+
+                // 🔥 send to Flask instead of redirecting directly
+                fetch("/process", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({ data: decodedText })
+                })
+                .then(res => res.json())
+                .then(res => {
+                  window.location.href = res.redirect;
+                });
+              });
+            }
+        );
+
+        writeLog("Camera scanning started...");
+      } catch (err) {
+        writeLog("Camera error: " + err);
+        scannerStarted = false;
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+        if (!html5QrCode || !scannerStarted) return;
+
+        html5QrCode.stop().then(() => {
+            writeLog("Camera stopped manually.");
+            cleanupCamera();
+        }).catch(err => {
+            writeLog("Stop error: " + err);
+        });
+    });
+
+    // helper function
+    function cleanupCamera() {
+        scannerStarted = false;
+        reader.innerHTML = "";
+        reader.style.displat = "none";
+
+        setTimeout(() => {
+            reader.style.display = "block";
+        }, 100);
+    }
+  </script>
+</body>
+</html>
