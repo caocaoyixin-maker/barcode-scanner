@@ -8,6 +8,12 @@ This project is designed to scan barcodes efficiently and return the decoded res
 
 The deployed version supports camera-based input in modern browsers, including mobile devices such as iOS (via HTTPS for access to Apple camera interface). 
 
+This project was developed locally, and packaged into a Github repository for sharing. 
+
+## License 
+
+This project is licensed under the MIT license. 
+
 ## Features
 
 - Real-time barcode scanning
